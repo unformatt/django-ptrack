@@ -22,7 +22,8 @@ class PtrackEncoder(object):
     """PtrackEncoder class."""
 
     @staticmethod
-    def decrypt(encoded_data: Union[bytes, str]) -> Tuple[Tuple[Any], Dict[str, Any]]:
+    # def decrypt(encoded_data: Union[bytes, str]) -> Tuple[Tuple[Any], Dict[str, Any]]:
+    def decrypt(encoded_data):# -> Tuple[Tuple[Any], Dict[str, Any]]:
         """Return args and kwargs decrypted from base64 url string."""
         if isinstance(encoded_data, str):
             encoded_data = encoded_data.encode('utf8')
@@ -37,7 +38,7 @@ class PtrackEncoder(object):
         return json.loads(data)
 
     @staticmethod
-    def encrypt(*args, **kwargs) -> str:
+    def encrypt(*args, **kwargs):# -> str:
         """Return a base64 url string with encoded positional/keyword args."""
         key = pad(settings.PTRACK_SECRET).encode('utf8')
         box = nacl.secret.SecretBox(key)

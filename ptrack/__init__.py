@@ -30,3 +30,24 @@ class TrackingPixel(object):
     def record(self, *args, **kwargs):
         """Callback executed when the tracking pixel img loads."""
         raise NotImplementedError("record method has not been implemented")
+
+
+import logging
+from django.urls import reverse
+from ptrack import ptrack_encoder
+
+logger = logging.getLogger(__name__)
+
+
+def create_img(*args, **kwargs):
+    """Generate a tracking pixel html img element."""
+    if settings.PTRACK_APP_URL:
+        encoded_dict = {'ptrack_encoded_data': ptrack_encoder.encrypt(*args, **kwargs)}
+        sub_path = reverse('ptrack', kwargs=encoded_dict)
+
+        url = '%s%s' % (settings.PTRACK_APP_URL, sub_path)
+    else:
+        raise ImproperlyConfigured('PTRACK_APP_URL not defined')
+
+    logger.debug('Ptrack tag generated URL: {}'.format(url))
+    return '<img src="%s" width=1 height=1>' % (url,)
